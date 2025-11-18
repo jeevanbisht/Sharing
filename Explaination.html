@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>New-EntraBetaPrivateAccessApplicationSegment – Bulk Creation Guide</title>
+    <style>
+        :root {
+            --bg: #0b1120;
+            --bg-elevated: #020617;
+            --card: #020617;
+            --card-border: #1f2937;
+            --accent: #38bdf8;
+            --accent-soft: rgba(56, 189, 248, 0.1);
+            --accent-strong: #0ea5e9;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --text-strong: #f9fafb;
+            --code-bg: #020617;
+            --code-border: #1e293b;
+            --mono: "Fira Code", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --radius-lg: 0.75rem;
+            --radius-md: 0.5rem;
+            --shadow-soft: 0 20px 40px rgba(15, 23, 42, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--sans);
+            background: radial-gradient(circle at top left, #111827, #020617 50%, #000000);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .page {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        .header {
+            text-align: left;
+            margin-bottom: 2.5rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: var(--accent-soft);
+            padding: 0.2rem 0.7rem;
+            border-radius: 999px;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: var(--accent-strong);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            margin: 1rem 0 0.5rem;
+            color: var(--text-strong);
+        }
+
+        .subtitle {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: radial-gradient(circle at top left, #020617, #020617 60%, #020617);
+            border-radius: 1rem;
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-soft);
+            padding: 1.75rem 1.5rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-strong);
+        }
+
+        .section-kicker {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
+        }
+
+        .section-body {
+            font-size: 0.94rem;
+            color: var(--text-main);
+        }
+
+        .key-points {
+            margin: 0.75rem 0 0;
+            padding-left: 1rem;
+            border-left: 2px solid rgba(148, 163, 184, 0.4);
+        }
+
+        .key-points p {
+            margin: 0 0 0.4rem;
+        }
+
+        .key-points p:last-child {
+            margin-bottom: 0;
+        }
+
+        .pill-label {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            font-size: 0.75rem;
+            font-family: var(--mono);
+            color: var(--text-muted);
+        }
+
+        pre {
+            background: var(--code-bg);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--code-border);
+            padding: 0.85rem 1rem;
+            overflow-x: auto;
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            margin: 0.65rem 0;
+            position: relative;
+        }
+
+        code {
+            font-family: var(--mono);
+        }
+
+        .code-label {
+            position: absolute;
+            top: 0.45rem;
+            right: 0.7rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 999px;
+            padding: 0.1rem 0.5rem;
+            border: 1px solid rgba(31, 41, 55, 0.9);
+        }
+
+        .inline-code {
+            font-family: var(--mono);
+            font-size: 0.85em;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 0.3rem;
+            padding: 0.05rem 0.35rem;
+            border: 1px solid rgba(31, 41, 55, 0.9);
+        }
+
+        .muted {
+            color: var(--text-muted);
+        }
+
+        ul {
+            padding-left: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        li {
+            margin-bottom: 0.25rem;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            margin: 0.75rem 0 0.25rem;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 2.1rem;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0.15rem;
+            width: 1.3rem;
+            height: 1.3rem;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .callout {
+            margin-top: 0.9rem;
+            padding: 0.75rem 0.9rem;
+            border-radius: 0.75rem;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(248, 250, 252, 0.06);
+            font-size: 0.86rem;
+        }
+
+        .callout-title {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #fbbf24;
+        }
+
+        .callout-title span {
+            font-size: 0.85rem;
+        }
+
+        .callout-body {
+            color: var(--text-main);
+        }
+
+        .callout-badge {
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 999px;
+            padding: 0.1rem 0.4rem;
+            background: rgba(120, 53, 15, 0.28);
+            border: 1px solid rgba(251, 191, 36, 0.6);
+            color: #facc15;
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                margin-top: 2rem;
+                padding: 0 1rem 3rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 1.4rem 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="header">
+        <div class="badge">
+            <span class="badge-dot"></span>
+            Entra Private Access
+        </div>
+        <h1>New-EntraBetaPrivateAccessApplicationSegment – Bulk Creation Guide</h1>
+        <p class="subtitle">
+            Walkthrough of the CSV structure, PowerShell script behavior, and common gotchas when using
+            <span class="inline-code">New-EntraBetaPrivateAccessApplicationSegment</span> for bulk segment creation.
+        </p>
+    </header>
+
+    <main class="card">
+        <!-- Section 1 -->
+        <section class="section">
+            <div class="section-kicker">1. CSV structure</div>
+            <h2 class="section-title">AppSegments.csv format</h2>
+            <div class="section-body">
+                <p>Your <span class="inline-code">AppSegments.csv</span> should look like this:</p>
+
+                <pre><span class="code-label">csv</span><code>AppObjectId,DestHost,ports,protocol,type
+00001111-aaaa-2222-bbbb-3333cccc4444,10.106.97.0/24,"1-21,23-442,444-65535","TCP,udp",ipRangeCidr
+00001111-aaaa-2222-bbbb-3333cccc4444,10.106.96.0/24,"1-21,23-442,444-65535","udp",ipRangeCidr
+00001111-aaaa-2222-bbbb-3333cccc4444,10.106.95.0/24,"1-21","udp",ipRangeCidr</code></pre>
+
+                <div class="key-points">
+                    <p><strong>Header row</strong> must be on its own line, followed by one line per entry (as shown above).</p>
+                    <p>
+                        <span class="pill-label">ports</span>
+                        is a comma-separated list of ranges, for example:<br />
+                        <span class="inline-code">1-21,23-442,444-65535</span>
+                    </p>
+                    <p>
+                        <span class="pill-label">protocol</span>
+                        is a comma-separated list, e.g. <span class="inline-code">"TCP,udp"</span> or <span class="inline-code">"udp"</span>.
+                        Casing doesn’t matter; the cmdlet normalizes to lowercase.
+                    </p>
+                    <p>
+                        <span class="pill-label">type</span>
+                        is <span class="inline-code">ipRangeCidr</span> here, which matches the
+                        <span class="inline-code">DestinationType</span> enum for CIDR ranges.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="section">
+            <div class="section-kicker">2. Script behavior</div>
+            <h2 class="section-title">CreateAppSegments.ps1</h2>
+            <div class="section-body">
+                <p>Your <span class="inline-code">CreateAppSegments.ps1</span> script:</p>
+
+                <pre><span class="code-label">powershell</span><code>$csvFile = "C:\temp\AppSegments.csv"
+
+# Assuming the CSV file has columns named 'AppObjectId', 'DestHost', 'ports', 'protocol', 'type'
+$variables = Import-Csv $csvFile
+
+foreach ($variable in $variables) {
+    $appObjectId = $variable.AppObjectId
+    $destHost    = $variable.DestHost
+    $ports       = $variable.ports -split ","
+    $protocol    = $variable.protocol -split ","
+    $type        = $variable.type
+
+    $params = @{
+        ApplicationId   = $appObjectId
+        DestinationHost = $destHost
+        Ports           = $ports
+        Protocol        = $protocol
+        DestinationType = $type
+    }
+
+    New-EntraBetaPrivateAccessApplicationSegment @params
+}</code></pre>
+
+                <p><strong>What this does:</strong></p>
+                <ul>
+                    <li>Imports each CSV row into <span class="inline-code">$variables</span> as an object.</li>
+                    <li>For each row:
+                        <ul>
+                            <li>Splits <span class="inline-code">ports</span> into an array of ranges (e.g. <span class="inline-code">@("1-21","23-442","444-65535")</span>).</li>
+                            <li>Splits <span class="inline-code">protocol</span> into an array (e.g. <span class="inline-code">@("TCP","udp")</span>).</li>
+                            <li>Builds a hashtable <span class="inline-code">$params</span> and splats it into <span class="inline-code">New-EntraBetaPrivateAccessApplicationSegment</span>.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <p class="muted">
+                    This matches Example 3 from the official cmdlet docs. The parameters
+                    <span class="inline-code">-Ports</span> and <span class="inline-code">-Protocol</span> accept
+                    <span class="inline-code">string</span> or <span class="inline-code">string[]</span>, and passing arrays
+                    is fully supported.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="section">
+            <div class="section-kicker">3. Execution flow</div>
+            <h2 class="section-title">How to run it end-to-end</h2>
+            <div class="section-body">
+                <p>Run the following in an elevated PowerShell session:</p>
+
+                <ol class="step-list">
+                    <li>
+                        <strong>Install / update the Entra Beta module</strong>
+                        <pre><span class="code-label">powershell</span><code>Install-Module Microsoft.Entra.Beta -Force
+Import-Module Microsoft.Entra.Beta</code></pre>
+                    </li>
+                    <li>
+                        <strong>Connect with the right scopes</strong>
+                        <pre><span class="code-label">powershell</span><code>Connect-Entra -Scopes `
+    'NetworkAccessPolicy.ReadWrite.All', `
+    'Application.ReadWrite.All', `
+    'NetworkAccess.ReadWrite.All'</code></pre>
+                    </li>
+                    <li>
+                        <strong>Confirm your app object ID</strong>
+                        <pre><span class="code-label">powershell</span><code>Get-EntraBetaApplication -Filter "displayName eq '&lt;GlobalSecureAccess_Application_DisplayName&gt;'" |
+    Select-Object DisplayName, Id</code></pre>
+                        <p class="muted">
+                            Make sure the <span class="inline-code">Id</span> matches
+                            <span class="inline-code">00001111-aaaa-2222-bbbb-3333cccc4444</span> in your CSV.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Save files and run</strong>
+                        <ul>
+                            <li>Save the CSV as <span class="inline-code">C:\temp\AppSegments.csv</span></li>
+                            <li>Save the script as <span class="inline-code">C:\temp\CreateAppSegments.ps1</span></li>
+                        </ul>
+                        <pre><span class="code-label">powershell</span><code>Set-Location C:\temp
+.\CreateAppSegments.ps1</code></pre>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="section">
+            <div class="section-kicker">4. Known gotcha</div>
+            <h2 class="section-title">Older module bug</h2>
+            <div class="section-body">
+                <p>
+                    Older versions of <span class="inline-code">Microsoft.Entra.Beta.NetworkAccess</span> can cause
+                    <span class="inline-code">New-EntraBetaPrivateAccessApplicationSegment</span> to throw a
+                    <span class="inline-code">CmdletBinding</span> error (for example,
+                    <span class="inline-code">PropertyNotFoundForType</span> around
+                    <span class="inline-code">ParameterSetName</span>).
+                </p>
+
+                <div class="callout">
+                    <div class="callout-title">
+                        <span class="callout-badge">Mitigation</span>
+                        <span>Update to a supported module version</span>
+                    </div>
+                    <div class="callout-body">
+                        <p><strong>If you see an error like this:</strong></p>
+                        <ul>
+                            <li>Ensure you’re on a recent <span class="inline-code">Microsoft.Entra.Beta</span> (e.g. <span class="inline-code">1.1.x</span> or later).</li>
+                            <li>If multiple versions are installed:
+                                <ul>
+                                    <li>Uninstall the older version.</li>
+                                    <li>Re-import the latest:</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <pre><span class="code-label">powershell</span><code>Get-Module Microsoft.Entra.Beta -ListAvailable
+Uninstall-Module Microsoft.Entra.Beta -RequiredVersion &lt;oldVersion&gt;
+Import-Module Microsoft.Entra.Beta -RequiredVersion &lt;newVersion&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
